@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -32,8 +31,10 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(color: Colors.deepPurple),
-              child: Text('Navigation Menu',
-                  style: TextStyle(color: Colors.white, fontSize: 24)),
+              child: Text(
+                'Navigation Menu',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.home),
@@ -48,6 +49,15 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.pop(context); // Close drawer
                 Navigator.pushNamed(context, '/login'); // Go to LoginPage
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+                Navigator.pushNamed(context, '/profile'); // Go to ProfilePage
               },
             ),
           ],
