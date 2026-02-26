@@ -21,10 +21,22 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // ✅ APP BAR WITH PROFILE ICON
       appBar: AppBar(
         title: Text(widget.title),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile');
+            },
+          ),
+        ],
       ),
+
+      // ✅ DRAWER MENU
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -36,33 +48,37 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
+
             ListTile(
               leading: const Icon(Icons.home),
               title: const Text('Home'),
               onTap: () {
-                Navigator.pop(context); // Close drawer
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.login),
-              title: const Text('Login'),
-              onTap: () {
-                Navigator.pop(context); // Close drawer
-                Navigator.pushNamed(context, '/login'); // Go to LoginPage
+                Navigator.pop(context);
               },
             ),
 
             ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
+              leading: const Icon(Icons.login),
+              title: const Text('Login'),
               onTap: () {
-                Navigator.pop(context); // Close drawer
-                Navigator.pushNamed(context, '/profile'); // Go to ProfilePage
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/login');
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.app_registration),
+              title: const Text('Signup'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/signup');
               },
             ),
           ],
         ),
       ),
+
+      // ✅ BODY CONTENT
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -75,9 +91,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+
+      // ✅ FLOATING BUTTON
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        backgroundColor: Colors.deepPurple,
         child: const Icon(Icons.add),
       ),
     );
