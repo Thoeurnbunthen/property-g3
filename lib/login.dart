@@ -5,12 +5,12 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // Clean look
+      debugShowCheckedModeBanner: false,
       title: 'Purple Life',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const LoginPage(),
@@ -19,32 +19,48 @@ class MyApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // 1. Added new controllers for the new fields
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  bool _isPasswordHidden = true;
+
   @override
   void dispose() {
-    _nameController.dispose();
-    _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
+  void _handleLogin() {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter email and password")),
+      );
+      return;
+    }
+
+    // For now just print values
+    print("Email: $email");
+    print("Password: $password");
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Login Successful (Demo)")));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: true ensures the keyboard doesn't hide your fields
       body: Stack(
         children: [
           SizedBox.expand(
@@ -53,7 +69,6 @@ class _LoginPageState extends State<LoginPage> {
           Container(color: Colors.black.withOpacity(0.3)),
           SafeArea(
             child: SingleChildScrollView(
-              // Added scroll for small screens
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
@@ -78,9 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                       "The best place to find millions of homes, apartments, and offices.",
                       style: TextStyle(fontSize: 14, color: Colors.white70),
                     ),
-                    const SizedBox(
-                      height: 40,
-                    ), // Spacing instead of Spacer for scroll view
+                    const SizedBox(height: 40),
 
                     Container(
                       padding: const EdgeInsets.all(24),
@@ -103,42 +116,28 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 24),
 
-                          // --- NEW: FULL NAME FIELD ---
-                          _buildLabel("Full Name"),
-                          _buildTextField(_nameController, "John Doe"),
-
-                          const SizedBox(height: 16),
-
-                          // --- NEW: PHONE NUMBER FIELD ---
-                          _buildLabel("Phone Number"),
-                          _buildTextField(
-                            _phoneController,
-                            "012 345 678",
-                            keyboardType: TextInputType.phone,
-                          ),
-
-                          const SizedBox(height: 16),
-
                           _buildLabel("Your Email"),
                           _buildTextField(
-                            _emailController,
-                            "example@gmail.com",
+                            controller: _emailController,
+                            hint: "example@gmail.com",
+                            keyboardType: TextInputType.emailAddress,
                           ),
 
                           const SizedBox(height: 16),
 
                           _buildLabel("Your Password"),
                           _buildTextField(
-                            _passwordController,
-                            "Password",
+                            controller: _passwordController,
+                            hint: "Password",
                             isPassword: true,
                           ),
 
                           const SizedBox(height: 20),
+
                           Center(
                             child: RichText(
                               text: const TextSpan(
-                                text: "Already have an account? ",
+                                text: "Don't have an account? ",
                                 style: TextStyle(color: Colors.white70),
                                 children: [
                                   TextSpan(
@@ -152,7 +151,9 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+
                           const SizedBox(height: 20),
+
                           Center(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -165,9 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                               ),
-                              onPressed: () {
-                                // Access values with _nameController.text, etc.
-                              },
+                              onPressed: _handleLogin,
                               child: const Text(
                                 "Sign in",
                                 style: TextStyle(
@@ -180,6 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
+
                     const SizedBox(height: 40),
                   ],
                 ),
@@ -191,7 +191,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Reusable label widget
   Widget _buildLabel(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
@@ -199,26 +198,40 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Reusable TextField widget
-  Widget _buildTextField(
-    TextEditingController controller,
-    String hint, {
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
     bool isPassword = false,
     TextInputType keyboardType = TextInputType.text,
   }) {
     return TextField(
       controller: controller,
-      obscureText: isPassword,
+      obscureText: isPassword ? _isPasswordHidden : false,
       keyboardType: keyboardType,
       decoration: InputDecoration(
         hintText: hint,
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
         ),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordHidden = !_isPasswordHidden;
+                  });
+                },
+              )
+            : null,
       ),
     );
   }
