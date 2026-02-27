@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
-import 'login.dart';
-import 'profile.dart' as profile_page;
-import 'signup.dart';
+import 'package:property/routes/app_routes.dart'; // adjust path as needed
 
 void main() {
   runApp(const MyApp());
@@ -17,13 +14,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Purple Life',
       theme: ThemeData(primarySwatch: Colors.deepPurple),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const MyHomePage(title: 'Purple Life Home'),
-        '/login': (context) => const LoginPage(),
-        '/profile': (context) => const profile_page.ProfilePage(),
-        '/signup': (context) => const SignupPage(),
-      },
+      initialRoute: AppRoutes.home,
+      routes: AppRoutes.routes,
     );
   }
 }
