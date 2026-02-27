@@ -74,6 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pushNamed(context, '/signup');
               },
             ),
+
+            ListTile(
+              leading: const Icon(Icons.app_registration),
+              title: const Text('review'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/review');
+              },
+            ),
           ],
         ),
       ),
