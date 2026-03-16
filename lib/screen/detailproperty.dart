@@ -375,7 +375,13 @@ class _PropertyDetailPageState extends State<PropertyDetailPage> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.only(left: 20),
-                    children: const [_RecommendedCard(), _RecommendedCard()],
+                    children: const [
+                      _RecommendedCard(),
+                      _RecommendedCard(),
+                      _RecommendedCard(),
+                      _RecommendedCard(),
+                      _RecommendedCard(),
+                    ],
                   ),
                 ),
 
