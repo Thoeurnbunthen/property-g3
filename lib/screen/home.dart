@@ -74,6 +74,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pushNamed(context, '/signup');
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text('detailproperty'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/detailproperty');
+              },
+            ),
           ],
         ),
       ),
