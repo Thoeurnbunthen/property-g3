@@ -9,8 +9,41 @@ void main() {
   );
 }
 
-class PropertyDetailPage extends StatelessWidget {
+class PropertyDetailPage extends StatefulWidget {
   const PropertyDetailPage({super.key});
+
+  @override
+  State<PropertyDetailPage> createState() => _PropertyDetailPageState();
+}
+
+class _PropertyDetailPageState extends State<PropertyDetailPage> {
+  final PageController _pageController = PageController();
+  int _currentImageIndex = 0;
+
+  final List<String> _images = [
+    'assets/hero-detail.png',
+    'assets/property.png',
+    'assets/property1.png',
+    'assets/property.png',
+    'assets/property1.png',
+  ];
+
+  void _onThumbnailTap(int index) {
+    setState(() {
+      _currentImageIndex = index;
+    });
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +56,28 @@ class PropertyDetailPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ------------------ IMAGE + TOP ICONS ------------------
+                // ------------------ IMAGE SLIDER + TOP ICONS ------------------
                 Stack(
                   children: [
-                    Image.asset(
-                      'assets/hero-detail.png', // Replace with your image
-                      width: double.infinity,
+                    SizedBox(
                       height: 300,
-                      fit: BoxFit.cover,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: _images.length,
+                        onPageChanged: (index) {
+                          setState(() {
+                            _currentImageIndex = index;
+                          });
+                        },
+                        itemBuilder: (context, index) {
+                          return Image.asset(
+                            _images[index],
+                            width: double.infinity,
+                            height: 300,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
                     ),
                     Positioned(
                       top: 40,
@@ -62,6 +109,29 @@ class PropertyDetailPage extends StatelessWidget {
                         child: IconButton(
                           icon: const Icon(Icons.menu),
                           onPressed: () {},
+                        ),
+                      ),
+                    ),
+                    // Image indicator dots
+                    Positioned(
+                      bottom: 20,
+                      left: 0,
+                      right: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          _images.length,
+                          (index) => Container(
+                            width: 8,
+                            height: 8,
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _currentImageIndex == index
+                                  ? Colors.white
+                                  : Colors.white.withOpacity(0.5),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -210,15 +280,32 @@ class PropertyDetailPage extends StatelessWidget {
 
                 SizedBox(
                   height: 100,
-                  child: ListView(
+                  child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    children: [
-                      _GalleryItem(image: "assets/property.png"),
-                      _GalleryItem(image: "assets/property1.png"),
-                      _GalleryItem(image: "assets/property.png"),
-                      _GalleryItem(image: "assets/property1.png"),
-                    ],
+                    itemCount: _images.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () => _onThumbnailTap(index),
+                        child: Container(
+                          width: 100,
+                          margin: const EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: _currentImageIndex == index
+                                  ? Colors.blue
+                                  : Colors.transparent,
+                              width: 2,
+                            ),
+                            image: DecorationImage(
+                              image: AssetImage(_images[index]),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
 
@@ -355,23 +442,6 @@ class _InfoItem extends StatelessWidget {
         const SizedBox(height: 4),
         Text(label, style: const TextStyle(fontSize: 12)),
       ],
-    );
-  }
-}
-
-class _GalleryItem extends StatelessWidget {
-  final String image;
-  const _GalleryItem({required this.image});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      margin: const EdgeInsets.only(right: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
-      ),
     );
   }
 }
