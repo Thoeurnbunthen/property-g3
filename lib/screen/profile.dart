@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../routes/app_routes.dart';
+
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -27,7 +29,7 @@ class ProfilePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined, color: Colors.black),
-            onPressed: () {},
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.editProfile),
           ),
         ],
       ),
