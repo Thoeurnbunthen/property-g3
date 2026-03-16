@@ -2,6 +2,8 @@ import 'package:property/screen/login.dart';
 import 'package:property/screen/profile.dart';
 import 'package:property/screen/signup.dart';
 import 'package:property/screen/detailproperty.dart';
+import 'package:property/screen/edit_profile.dart';
+
 import '../screen/home.dart';
 
 class AppRoutes {
@@ -10,6 +12,7 @@ class AppRoutes {
   static const signup = '/signup';
   static const profile = '/profile';
   static const detailproperty = '/detailproperty';
+  static const editProfile = '/edit-profile';
 
   static final routes = {
     home: (context) => MyHomePage(title: 'Purple Life Home'),
@@ -17,5 +20,6 @@ class AppRoutes {
     signup: (context) => SignupPage(),
     profile: (context) => ProfilePage(),
     detailproperty: (context) => PropertyDetailPage(),
+    editProfile: (context) => const EditProfilePage(),
   };
 }
