@@ -125,7 +125,7 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.home_filled, color: Colors.white),
-                    onPressed: () {},
+                    onPressed: () => Navigator.pushNamed(context, AppRoutes.home),
                   ),
                   IconButton(
                     icon: const Icon(
@@ -136,7 +136,11 @@ class ProfilePage extends StatelessWidget {
                   ),
                   IconButton(
                     icon: const Icon(Icons.person, color: Colors.white),
-                    onPressed: () {},
+                    onPressed: () => Navigator.pushNamed(context, AppRoutes.profile),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.phone_in_talk, color: Colors.white),
+                    onPressed: () => Navigator.pushNamed(context, AppRoutes.contact),
                   ),
                 ],
               ),
