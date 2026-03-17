@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../routes/app_routes.dart';
+
 void main() {
   runApp(
     const MaterialApp(
@@ -86,7 +88,9 @@ class _PropertyDetailPageState extends State<PropertyDetailPage> {
                         backgroundColor: Colors.white70,
                         child: IconButton(
                           icon: const Icon(Icons.arrow_back_ios),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, AppRoutes.home);
+                          },
                         ),
                       ),
                     ),
