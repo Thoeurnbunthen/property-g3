@@ -82,6 +82,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pushNamed(context, '/detailproperty');
               },
             ),
+
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text('favorite'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/favorite');
+              },
+            ),
           ],
         ),
       ),
