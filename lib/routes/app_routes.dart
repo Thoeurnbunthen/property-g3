@@ -1,32 +1,3 @@
-<<<<<<< HEAD
-import 'package:property/screen/contact.dart';
-import 'package:property/screen/login.dart';
-import 'package:property/screen/profile.dart';
-import 'package:property/screen/signup.dart';
-import 'package:property/screen/detailproperty.dart';
-import 'package:property/screen/edit_profile.dart';
-import 'package:property/screen/favorite.dart';
-
-import '../screen/home.dart';
-
-class AppRoutes {
-  static const home = '/';
-  static const login = '/login';
-  static const signup = '/signup';
-  static const profile = '/profile';
-  static const detailproperty = '/detailproperty';
-  static const editProfile = '/edit-profile';
-  static const contact = '/contact';
-
-  static const favorite = '/favorite';
-  static final routes = {
-    home: (context) => MyHomePage(title: 'Purple Life Home'),
-    login: (context) => MyApp(),
-    signup: (context) => SignupPage(),
-    profile: (context) => ProfilePage(),
-    favorite: (context) => FavoritePage(),
-    detailproperty: (context) => PropertyDetailPage(),
-=======
 import 'package:flutter/material.dart';
 import 'package:property_g3/screen/login.dart';
 import 'package:property_g3/screen/profile.dart';
@@ -36,6 +7,7 @@ import 'package:property_g3/screen/edit_profile.dart';
 import 'package:property_g3/screen/favorite.dart';
 import 'package:property_g3/screen/navbar.dart'; 
 import 'package:property_g3/screen/home.dart';
+import 'package:property_g3/screen/contact.dart';
 
 class AppRoutes {
   static const String navbar = '/navbar';
@@ -46,6 +18,7 @@ class AppRoutes {
   static const String detailproperty = '/detailproperty';
   static const String editProfile = '/edit-profile';
   static const String favorite = '/favorite';
+  static const String contact = '/contact';
 
   static Map<String, WidgetBuilder> routes = {
     navbar: (context) => const NavPage(), 
@@ -55,7 +28,6 @@ class AppRoutes {
     profile: (context) => const ProfilePage(),
     favorite: (context) => const FavoritePage(),
     detailproperty: (context) => const PropertyDetailPage(),
->>>>>>> 9c26458 (add home page and navbar)
     editProfile: (context) => const EditProfilePage(),
     contact: (context) => const ContactPage(),
   };
