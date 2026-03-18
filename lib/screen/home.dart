@@ -85,6 +85,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ListTile(
               leading: const Icon(Icons.login),
+              title: const Text('property-list'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/property-list');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.login),
               title: const Text('favorite'),
               onTap: () {
                 Navigator.pop(context);
