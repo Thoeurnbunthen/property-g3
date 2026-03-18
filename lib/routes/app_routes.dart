@@ -7,6 +7,7 @@ import 'package:property_g3/screen/edit_profile.dart';
 import 'package:property_g3/screen/favorite.dart';
 import 'package:property_g3/screen/navbar.dart'; 
 import 'package:property_g3/screen/home.dart';
+import 'package:property_g3/screen/contact.dart';
 
 class AppRoutes {
   static const String navbar = '/navbar';
@@ -17,6 +18,7 @@ class AppRoutes {
   static const String detailproperty = '/detailproperty';
   static const String editProfile = '/edit-profile';
   static const String favorite = '/favorite';
+  static const String contact = '/contact';
 
   static Map<String, WidgetBuilder> routes = {
     navbar: (context) => const NavPage(), 
@@ -27,5 +29,6 @@ class AppRoutes {
     favorite: (context) => const FavoritePage(),
     detailproperty: (context) => const PropertyDetailPage(),
     editProfile: (context) => const EditProfilePage(),
+    contact: (context) => const ContactPage(),
   };
 }
