@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -12,12 +14,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Purple Life',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const LoginPage(),
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+
+      // --- 1. SET INITIAL ROUTE ---
+      initialRoute: '/',
+
+      // --- 2. DEFINE ROUTE TABLE ---
+      routes: {
+        '/': (context) => const LoginPage(),
+        '/home': (context) =>
+            const HomePage(), // Link the name '/home' to your class
+      },
     );
   }
 }
 
+// --- LOGIN PAGE ---
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -26,36 +38,76 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _identifierController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   bool _isPasswordHidden = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _identifierController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _handleLogin() {
-    final email = _emailController.text.trim();
+  Future<void> _handleLogin() async {
+    final identifier = _identifierController.text.trim();
     final password = _passwordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter email and password")),
-      );
+    if (identifier.isEmpty || password.isEmpty) {
+      _showSnackBar("Please enter email/username and password");
       return;
     }
 
-    // For now just print values
-    print("Email: $email");
-    print("Password: $password");
+    setState(() => _isLoading = true);
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Login Successful (Demo)")));
+    try {
+      final url = Uri.parse(
+        "https://propertyrentalapi-simple.onrender.com/api/auth/login",
+      );
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email_or_username": identifier,
+          "password": password,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        print("Login Success: $data");
+
+        if (mounted) {
+          _showSnackBar("Login Successful! Welcome.");
+
+          // --- 3. UPDATED NAVIGATION ---
+          // This matches your signup logic perfectly
+          Navigator.pushReplacementNamed(context, '/home');
+        }
+      } else {
+        final Map<String, dynamic> errorData = jsonDecode(response.body);
+        _showSnackBar(
+          errorData['message'] ?? "Invalid credentials. Try again.",
+        );
+      }
+    } catch (e) {
+      _showSnackBar("Connection error. Please check your internet.");
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: const Color(0xFF1A3A5A),
+      ),
+    );
   }
 
   @override
@@ -64,125 +116,83 @@ class _LoginPageState extends State<LoginPage> {
       body: Stack(
         children: [
           SizedBox.expand(
-            child: Image.asset("assets/bg(login).png", fit: BoxFit.cover),
+            child: Image.asset(
+              "assets/bg(login).png",
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  Container(color: const Color(0xFF0D2B45)),
+            ),
           ),
-          Container(color: Colors.black.withOpacity(0.3)),
+          Container(color: Colors.black.withOpacity(0.5)),
           SafeArea(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back_ios),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 50),
+                  const Text(
+                    "Welcome to\nPurple Life",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      onPressed: () => Navigator.pop(context),
                     ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Welcome to\nPurple Life",
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                  ),
+                  const SizedBox(height: 40),
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A3A5A).withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "The best place to find millions of homes, apartments, and offices.",
-                      style: TextStyle(fontSize: 14, color: Colors.white70),
-                    ),
-                    const SizedBox(height: 40),
-
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0D2B45).withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Center(
-                            child: Text(
-                              "Sign in",
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Sign in",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        _buildTextField(
+                          _identifierController,
+                          "Email or Username",
+                          false,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextField(_passwordController, "Password", true),
+                        const SizedBox(height: 25),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueAccent,
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size(double.infinity, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          const SizedBox(height: 24),
-
-                          _buildLabel("Your Email"),
-                          _buildTextField(
-                            controller: _emailController,
-                            hint: "example@gmail.com",
-                            keyboardType: TextInputType.emailAddress,
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          _buildLabel("Your Password"),
-                          _buildTextField(
-                            controller: _passwordController,
-                            hint: "Password",
-                            isPassword: true,
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          Center(
-                            child: RichText(
-                              text: const TextSpan(
-                                text: "Don't have an account? ",
-                                style: TextStyle(color: Colors.white70),
-                                children: [
-                                  TextSpan(
-                                    text: "Sign Up",
-                                    style: TextStyle(
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                          onPressed: _isLoading ? null : _handleLogin,
+                          child: _isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          Center(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 50,
-                                  vertical: 14,
+                                )
+                              : const Text(
+                                  "Sign in",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              onPressed: _handleLogin,
-                              child: const Text(
-                                "Sign in",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-
-                    const SizedBox(height: 40),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -191,47 +201,59 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildLabel(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Text(text, style: const TextStyle(color: Colors.white70)),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hint,
-    bool isPassword = false,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hint,
+    bool isPass,
+  ) {
     return TextField(
       controller: controller,
-      obscureText: isPassword ? _isPasswordHidden : false,
-      keyboardType: keyboardType,
+      obscureText: isPass ? _isPasswordHidden : false,
       decoration: InputDecoration(
         hintText: hint,
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 14,
-        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
         ),
-        suffixIcon: isPassword
+        suffixIcon: isPass
             ? IconButton(
                 icon: Icon(
                   _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
                 ),
-                onPressed: () {
-                  setState(() {
-                    _isPasswordHidden = !_isPasswordHidden;
-                  });
-                },
+                onPressed: () =>
+                    setState(() => _isPasswordHidden = !_isPasswordHidden),
               )
             : null,
+      ),
+    );
+  }
+}
+
+// --- HOME PAGE ---
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Purple Life Dashboard"),
+        backgroundColor: const Color(0xFF0D2B45),
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+          ),
+        ],
+      ),
+      body: const Center(
+        child: Text(
+          "Welcome Home!",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
