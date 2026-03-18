@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
-import 'login.dart';
-import 'profile.dart' as profile_page;
-import 'signup.dart';
+import 'package:property_g3/routes/app_routes.dart'; // Use correct name
+import 'package:property_g3/screen/navbar.dart';    // Use correct name
 
 void main() {
   runApp(const MyApp());
@@ -16,14 +14,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Purple Life',
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const MyHomePage(title: 'Purple Life Home'),
-        '/login': (context) => const LoginPage(),
-        '/profile': (context) => const profile_page.ProfilePage(),
-        '/signup': (context) => const SignupPage(),
-      },
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0D2D44)),
+        useMaterial3: true,
+      ),
+      initialRoute: AppRoutes.navbar, 
+      routes: AppRoutes.routes,
     );
   }
 }

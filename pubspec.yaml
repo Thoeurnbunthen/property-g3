@@ -1,4 +1,4 @@
-name: property
+name: property_g3
 description: "A new Flutter project."
 publish_to: "none"
 
@@ -10,14 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  http: ^1.2.0
   cupertino_icons: ^1.0.8
-  # Added this line to fix your import error:
-  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
+  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
@@ -25,3 +24,8 @@ flutter:
   assets:
     - assets/bg(login).png
     - assets/profile_pic.png
+    - assets/hero-detail.png
+    - assets/r-commect.png
+    - assets/person.png
+    - assets/property.png
+    - assets/property1.png
