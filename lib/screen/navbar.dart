@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:property_g3/screen/home.dart';
 import 'package:property_g3/screen/favorite.dart';
 import 'package:property_g3/screen/profile.dart';
-
+import 'package:property_g3/screen/detailproperty.dart'; 
 class NavPage extends StatefulWidget {
   const NavPage({super.key});
 
@@ -18,6 +18,7 @@ class _NavPageState extends State<NavPage> {
     const Home(),
     const FavoritePage(),
     const ProfilePage(),
+    const PropertyDetailPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -41,6 +42,7 @@ class _NavPageState extends State<NavPage> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorite'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Details'),
         ],
       ),
     );
