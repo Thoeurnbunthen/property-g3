@@ -29,7 +29,8 @@ class ProfilePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined, color: Colors.black),
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.editProfile),
+            onPressed: () =>
+                Navigator.pushNamed(context, AppRoutes.editProfile),
           ),
         ],
       ),
@@ -97,55 +98,12 @@ class ProfilePage extends StatelessWidget {
               style: TextStyle(
                 color: Color(0xFF0D2B45),
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: 12,
               ),
             ),
           ),
 
           const SizedBox(height: 20),
-
-          // --- CUSTOM BOTTOM NAVIGATION BAR ---
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            child: Container(
-              height: 70,
-              decoration: BoxDecoration(
-                color: const Color(0xFF0D2B45),
-                borderRadius: BorderRadius.circular(35),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.home_filled, color: Colors.white),
-                    onPressed: () => Navigator.pushNamed(context, AppRoutes.home),
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.favorite_border,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.person, color: Colors.white),
-                    onPressed: () => Navigator.pushNamed(context, AppRoutes.profile),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.phone_in_talk, color: Colors.white),
-                    onPressed: () => Navigator.pushNamed(context, AppRoutes.contact),
-                  ),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
     );
